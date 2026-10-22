@@ -1,0 +1,15 @@
+{
+  "name": "swallowing-stars-tides",
+  "version": "0.8.1",
+  "private": true,
+  "type": "module",
+  "description": "吞噬星空 — 写实行星、流星碎片与不规则穿行障碍",
+  "scripts": {
+    "dev": "node server.mjs",
+    "start": "node server.mjs",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

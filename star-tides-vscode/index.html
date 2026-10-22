@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#040b14">
+  <meta name="description" content="吞噬星空：从蔚蓝新生走向终焉，用上半身动作控制行星，化为流星，再聚成世界。">
+  <title>吞噬星空 · 行星演化</title>
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="src/main.js"></script>
+</head>
+<body>
+  <svg class="icon-library" aria-hidden="true"><defs>
+    <symbol id="arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></symbol>
+    <symbol id="sound" viewBox="0 0 24 24"><path d="M10 5 5 9H2v6h3l5 4zM15 8c3 2 3 6 0 8M18 4c6 4 6 12 0 16"/></symbol>
+    <symbol id="pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+    <symbol id="reset" viewBox="0 0 24 24"><path d="M4 9a8 8 0 1 1 0 7M4 3v6h6"/></symbol>
+    <symbol id="camera" viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3"/></symbol>
+    <symbol id="split" viewBox="0 0 64 48"><circle cx="32" cy="9" r="5"/><path d="M32 16v17M32 21 8 18M32 21l24-3M32 33l-8 11M32 33l8 11"/></symbol>
+    <symbol id="merge" viewBox="0 0 64 48"><circle cx="32" cy="9" r="5"/><path d="M32 16v17M32 19 21 25l8 3M32 19l11 6-8 3M32 33l-6 11M32 33l6 11"/></symbol>
+    <symbol id="move" viewBox="0 0 64 48"><circle cx="27" cy="9" r="5"/><path d="M27 16v17M27 19l13 4 13-6M27 22l12 9 14-7M27 33l-8 11M27 33l8 11"/></symbol>
+  </defs></svg>
+
+  <!-- 首页只有一个可操作入口，其他元素都是视觉场景。 -->
+  <main id="home-page" class="home-scene">
+    <canvas id="home-canvas" aria-hidden="true"></canvas>
+    <div class="screen-frame" aria-hidden="true"></div>
+    <header class="home-header"><span class="wordmark">吞噬星空</span><span class="mono">A BODY-DRIVEN COSMOS <b> / </b> ROAMING WORLDS</span></header>
+    <div class="home-copy">
+      <p class="overline"><i></i> 从一颗蔚蓝星球开始</p>
+      <h1><span>吞噬</span><strong>星空</strong></h1>
+      <p class="home-tagline">诞生于宁静。成长于吞噬。</p>
+      <button id="enter-button" class="primary-button"><span>进入星空</span><svg><use href="#arrow"/></svg><i></i></button>
+      <span class="home-coordinate mono" aria-hidden="true">EVERY WORLD HAS AN ENDING</span>
+    </div>
+    <div class="reactor-annotation" aria-hidden="true"><span class="mono">GENESIS / COLLAPSE</span><i></i><span>一颗星球的诞生与终焉</span></div>
+    <div class="home-footer mono"><span><i class="status-dot"></i> 用双手，成为引力</span><span>蔚蓝新生 / 熔火失衡 / 终焉湮灭</span></div>
+  </main>
+
+  <div id="play-page" hidden>
+    <main class="game-stage" aria-label="吞噬星空全屏游玩">
+      <canvas id="game-canvas" tabindex="0" aria-label="方向键或WASD移动，空格分裂，M合并，Shift推进，也可拖动"></canvas>
+      <div class="screen-frame" aria-hidden="true"></div>
+      <div class="top-left-hud">
+        <a class="back-home" href="#home" aria-label="返回首页">◌<span>星空</span></a>
+        <div class="score-hud"><span class="mini-label">已吞噬星体</span><strong id="score">000</strong><span class="mono score-unit">ABSORBED</span></div>
+      </div>
+      <div class="sector-label mono"><span id="stage-name">蔚蓝新生</span><small id="stage-description">海洋 · 大陆 · 云层</small></div>
+      <nav class="toolbar" aria-label="游戏控制">
+        <button id="help-button" class="icon-button" aria-label="玩法与设置" title="玩法与设置">?</button>
+        <button id="sound-button" class="icon-button" aria-label="关闭音效" title="关闭音效" aria-pressed="true"><svg><use href="#sound"/></svg></button>
+        <button id="pause-button" class="icon-button" aria-label="暂停" title="暂停"><svg><use href="#pause"/></svg></button>
+        <button id="reset-button" class="icon-button" aria-label="重新开始" title="重新开始"><svg><use href="#reset"/></svg></button>
+      </nav>
+      <div id="traffic-status" class="traffic-status" data-phase="calm"><span>星际航路</span><strong id="traffic-phase">平静星域</strong><small id="traffic-count">留意周围航线</small></div>
+      <div class="mode-indicator"><i class="status-dot"></i><span id="mode-label">练习模式</span></div>
+      <p id="feedback" class="feedback" role="status">吞噬小行星成长，避开不规则穿行的星球。</p>
+      <div id="combo-hud" class="combo-hud" hidden><span class="mono">DEVOURING CHAIN</span><strong>×<b id="combo-count">2</b></strong><div><i id="combo-progress"></i></div></div>
+      <div class="bottom-left-hud">
+        <div class="telemetry"><span class="mono">BODIES <strong id="ball-count">01</strong></span><span class="mono">VELOCITY <strong id="speed-value">000</strong></span></div>
+        <div class="charge-label"><span id="evolution-label">前往熔火失衡</span><span id="charge-count" class="mono">0%</span></div>
+        <div class="charge-track"><i id="charge-fill"></i></div>
+      </div>
+      <div class="quick-controls">
+        <button data-action="split"><svg><use href="#split"/></svg><span>分裂</span><kbd>SPACE</kbd></button>
+        <button data-action="merge"><svg><use href="#merge"/></svg><span>聚合</span><kbd>M</kbd></button>
+        <span id="move-hint">拖动 / 方向键移动 <b>·</b> Shift 推进</span>
+      </div>
+      <div id="paused-overlay" class="paused-overlay" hidden><div><span class="pause-glyph">◈</span><p class="overline">SYSTEM ON STANDBY</p><h2>让宇宙，暂停一会儿。</h2><button id="resume-button" class="primary-button">继续探索 <svg><use href="#arrow"/></svg></button></div></div>
+    </main>
+
+    <aside id="camera-dock" class="camera-dock" aria-label="右下角摄像头识别预览">
+      <div class="dock-title"><span><i class="status-dot"></i> MOTION LINK</span><button id="camera-collapse" aria-label="收起摄像头预览" aria-controls="camera-content" aria-expanded="true">−</button></div>
+      <div id="camera-content">
+        <div class="camera-view"><video id="camera-video" autoplay playsinline muted></video><canvas id="pose-canvas"></canvas><div id="camera-placeholder"><svg><use href="#split"/></svg><span>让双手成为行星的引力</span></div><span id="camera-state" class="camera-state mono">OFFLINE</span><div class="camera-corners" aria-hidden="true"></div></div>
+        <div class="tracking-values"><span><i></i><b id="body-state">身体待机</b></span><span><i></i><b id="hands-state">等待双手</b></span></div>
+        <button id="camera-start" class="camera-button"><svg><use href="#camera"/></svg><span>开启体感连接</span></button>
+        <button id="practice-shortcut" class="practice-shortcut" hidden>切回键盘 / 触屏</button>
+        <p id="camera-status" class="camera-status" role="status">画面仅在本机处理，不录制、不上传。</p>
+      </div>
+    </aside>
+  </div>
+
+  <dialog id="settings-dialog" aria-labelledby="settings-title">
+    <button id="close-settings" class="dialog-close" aria-label="关闭玩法与设置">×</button>
+    <p class="overline">FLIGHT MANUAL</p><h2 id="settings-title">成为引力，吞噬星空</h2>
+    <div class="mode-tabs"><button id="practice-tab" class="selected">键盘 / 触屏</button><button id="camera-tab">上半身体感</button></div>
+    <div class="guide-row"><svg><use href="#split"/></svg><div><strong>张开双臂 → 分裂</strong><small>双臂向两侧展开，放松后可再次分裂；最多 8 块陨岩</small></div><kbd>SPACE</kbd></div>
+    <div class="guide-row"><svg><use href="#merge"/></svg><div><strong>缩拢身体 → 合并</strong><small>双手靠近胸前，岩石沿弧线收拢，恢复原来对应的星球</small></div><kbd>M</kbd></div>
+    <div class="guide-row"><svg><use href="#move"/></svg><div><strong>双手同向 → 移动</strong><small>双手同时朝同一方向伸出；肩膀、手肘与双手需完整入镜</small></div><kbd>↑↓←→</kbd></div>
+    <p class="mechanics-note">吞噬小行星，逐渐由蔚蓝新生变为熔火失衡、终焉湮灭。分裂化为星光陨岩；合并恢复总体质量对应的行星。障碍星球大小、速度与入场时间各不相同，从四周随机位置进入，沿各自航线穿过画面并离开屏幕。碰撞击退并损失 7% 总质量，最低保留初始质量；之后有 1.6 秒保护。分裂后体形更小，适合穿越空隙。体量越大、吞噬越多，配乐越紧张，吞噬声越沉重。</p>
+    <div class="settings-row"><label for="volume">音乐与音效</label><input id="volume" type="range" min="0" max="100" value="45"><output id="volume-value" for="volume">45%</output></div>
+    <div class="settings-row"><label for="quality">特效强度</label><select id="quality"><option value="high">丰富光效</option><option value="low">轻量流畅</option></select></div>
+    <div class="settings-row"><label for="reduced-motion">减少动态效果</label><input type="checkbox" id="reduced-motion"></div>
+    <div class="dialog-bottom"><span>青色 / 身体 · 金色 / 双手</span><button id="recalibrate" disabled>重新校准 ↻</button></div>
+  </dialog>
+  <dialog id="failure-dialog" class="failure-dialog" aria-labelledby="failure-title">
+    <p class="overline">LOST TO THE COSMOS</p>
+    <h2 id="failure-title">星球湮灭 · 挑战失败</h2>
+    <p id="failure-reason">你的星球已被更大的星体吞噬。</p>
+    <div class="failure-stats"><div><strong id="failure-score">0</strong><span>吞噬星体</span></div><div><strong id="failure-time">0 s</strong><span>航行时间</span></div></div>
+    <button id="retry-button" class="primary-button">重新开始 <svg><use href="#arrow"/></svg></button>
+    <button id="failure-home" class="failure-home">返回首页</button>
+  </dialog>
+</body>
+</html>

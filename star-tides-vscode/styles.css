@@ -1,0 +1,330 @@
+/* 吞噬星空 — 配色、排版与浮层布局。无需编译即可修改。 */
+:root {
+  --bg: #030509;
+  --cyan: #d0b48e;
+  --violet: #c88962;
+  --gold: #d8b488;
+  --text: #e6e2db;
+  --muted: #919594;
+  --line: #71bddd26;
+  --panel: #0a0c10df;
+  --font: 'Microsoft YaHei', 'PingFang SC', system-ui, sans-serif;
+  --mono: 'Cascadia Code', Consolas, 'Courier New', monospace;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font: 14px var(--font); }
+button, input, select { font: inherit; }
+button { cursor: pointer; color: inherit; -webkit-tap-highlight-color: transparent; }
+button:disabled { opacity: .4; cursor: not-allowed; }
+button:focus-visible, a:focus-visible, canvas:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--cyan); outline-offset: 5px; }
+button, a, input { touch-action: manipulation; }
+a { color: inherit; text-decoration: none; }
+svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+[hidden] { display: none !important; }
+.icon-library { position: absolute; width: 0; height: 0; overflow: hidden; }
+h1, h2, p { margin-top: 0; }
+.mono { font-family: var(--mono); }
+.status-dot { display: inline-block; width: 4px; height: 4px; background: var(--cyan); box-shadow: 0 0 8px #66f5ff66; }
+.overline { font-size: 10px; font-weight: 400; letter-spacing: 3px; color: #8cb5c8; display: flex; gap: 10px; align-items: center; }
+.overline i { width: 5px; height: 5px; background: var(--cyan); box-shadow: 0 0 14px var(--cyan); }
+
+/* 首页：一个入口，完整的反应堆视觉场景。 */
+.home-scene, #play-page, .game-stage { position: fixed; inset: 0; width: 100%; height: 100dvh; overflow: hidden; }
+#home-canvas, #game-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+#game-canvas { touch-action: none; }
+.screen-frame { position: absolute; inset: 16px; pointer-events: none; border: 1px solid #87b9d00b; }
+.screen-frame::before, .screen-frame::after { content: ''; width: 24px; height: 24px; position: absolute; border-color: #7bc9dc4d; border-style: solid; }
+.screen-frame::before { top: -1px; left: -1px; border-width: 1px 0 0 1px; }
+.screen-frame::after { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
+.home-header { position: absolute; top: 39px; left: 46px; right: 46px; display: flex; justify-content: space-between; align-items: center; }
+.wordmark { font: 700 21px var(--mono); letter-spacing: 3px; color: #e7faff; }
+.wordmark span { font-size: 21px; color: var(--cyan); }
+.home-header > .mono { font-size: 9px; letter-spacing: 2px; color: #688da3; }
+.home-header b { color: #5fe8ff55; padding: 0 9px; font-weight: normal; }
+.home-copy { position: absolute; left: 9%; top: 50%; transform: translateY(-46%); }
+.home-copy > .overline { margin-bottom: 24px; }
+.home-copy h1 { font-family: Arial, sans-serif; margin: 0; line-height: .91; letter-spacing: -6px; }
+.home-copy h1 > span { display: block; font-size: clamp(37px, 4vw, 62px); font-weight: 400; letter-spacing: 15px; margin-bottom: 10px; color: #b9d8e5; }
+.home-copy h1 strong { font-size: clamp(84px, 10.3vw, 158px); font-weight: 900; color: #eefbff; text-shadow: 2px 0 #66f5ff25, 0 0 60px #66d5ff18; }
+.title-period { color: var(--cyan); text-shadow: 0 0 22px #66f5ff66; }
+.home-tagline { margin: 30px 0 34px; color: #8da8ba; font-size: 13px; letter-spacing: 4px; }
+.primary-button { position: relative; min-width: 214px; height: 56px; display: inline-flex; align-items: center; justify-content: space-between; gap: 34px; padding: 0 24px; border: 1px solid #86f2ff99; border-radius: 2px; color: #b9f7ff; background: linear-gradient(110deg, #164557b3, #0b1b2c); font-size: 13px; letter-spacing: 3px; overflow: hidden; box-shadow: inset 0 0 25px #69eaff0a, 0 0 35px #46d8f009; transition: box-shadow .2s, border-color .2s, background .2s; }
+.primary-button::before { content: ''; position: absolute; width: 16px; height: 16px; right: -9px; top: -9px; background: var(--bg); border-bottom: 1px solid #86f2ff99; transform: rotate(45deg); }
+.primary-button:hover { border-color: #d1fdff; background: linear-gradient(110deg, #21677c, #102438); box-shadow: 0 0 40px #51d9ff24; }
+.primary-button i { position: absolute; width: 30px; height: 120%; top: -10%; left: -70px; transform: skewX(-25deg); background: #9bffff21; animation: sweep 5s infinite; }
+.primary-button svg { width: 26px; }
+.home-coordinate { display: block; font-size: 8px; letter-spacing: 2.8px; color: #527389; margin-top: 23px; }
+.reactor-annotation { position: absolute; right: 9%; bottom: 21%; font-size: 9px; color: #7195aa; display: grid; gap: 9px; text-align: right; pointer-events: none; }
+.reactor-annotation .mono { letter-spacing: 3px; font-size: 9px; color: #9acbdc; }
+.reactor-annotation i { display: block; width: 100px; border-top: 1px solid #71bed347; justify-self: end; }
+.home-footer { position: absolute; bottom: 35px; left: 46px; right: 46px; display: flex; justify-content: space-between; align-items: center; font-size: 8px; letter-spacing: 1.5px; color: #507386; }
+.home-footer > span:first-child { display: flex; gap: 9px; align-items: center; }
+
+/* 全屏游戏 HUD：面积让给游戏，只有轻量浮层。 */
+.top-left-hud { position: absolute; top: 31px; left: 34px; display: flex; align-items: center; gap: 25px; }
+.back-home { display: flex; flex-direction: column; align-items: center; color: var(--cyan); font-size: 31px; line-height: 1; }
+.back-home span { margin-top: 6px; font: 7px var(--mono); letter-spacing: 2px; color: #99c2d2; }
+.back-home:hover { filter: brightness(1.5); }
+.score-hud { padding-left: 20px; border-left: 1px solid var(--line); display: grid; grid-template-columns: auto auto; column-gap: 10px; align-items: baseline; }
+.mini-label { grid-column: 1 / -1; font-size: 9px; letter-spacing: 2px; color: #7195ab; margin-bottom: 5px; }
+.score-hud strong { font: 400 32px / 1 var(--mono); letter-spacing: -1px; color: #e2f7ff; }
+.score-unit { font-size: 7px; letter-spacing: 1.2px; color: #4f7188; }
+.sector-label { position: absolute; top: 40px; left: 50%; transform: translateX(-50%); font-size: 9px; letter-spacing: 2px; color: #426277; }
+.sector-label span { margin: 0 10px; color: #68bcd44d; }
+.toolbar { position: absolute; right: 32px; top: 32px; display: flex; gap: 8px; }
+.icon-button { display: grid; place-items: center; width: 35px; height: 35px; background: #0c1b2988; border: 1px solid #7dbad42b; color: #83aabd; border-radius: 3px; font: 16px var(--mono); backdrop-filter: blur(8px); }
+.icon-button svg { width: 15px; height: 15px; }
+.icon-button:hover { color: #b7f5ff; background: #143746aa; border-color: #7fdff466; }
+.icon-button.is-muted { opacity: .4; }
+.mode-indicator { position: absolute; top: 111px; left: 39px; display: flex; align-items: center; gap: 8px; color: #61879c; font-size: 9px; letter-spacing: 1px; }
+.feedback { position: absolute; top: 108px; left: 50%; transform: translateX(-50%); max-width: 60%; text-align: center; font-size: 10px; letter-spacing: 1px; color: #81a4b56b; pointer-events: none; }
+.combo-hud { position: absolute; top: 150px; right: 35px; text-align: right; pointer-events: none; }
+.combo-hud > span { display: block; font-size: 7px; letter-spacing: 1.5px; color: #8a78bc; }
+.combo-hud strong { display: block; font: 400 30px var(--mono); color: #c4b3f8; margin: 7px 0 9px; }
+.combo-hud b { font-weight: 400; }
+.combo-hud > div { width: 104px; height: 2px; background: #b995ff17; margin-left: auto; }
+.combo-hud i { display: block; height: 100%; width: 100%; background: #ae8bff; transform-origin: right; box-shadow: 0 0 10px #b391ff44; }
+.bottom-left-hud { position: absolute; left: 37px; bottom: 33px; width: 190px; pointer-events: none; }
+.telemetry { display: flex; gap: 20px; font-size: 8px; color: #5b8299; }
+.telemetry strong { font-size: 12px; color: #aed2e1; font-weight: 400; display: inline-block; margin-left: 7px; }
+.charge-label { display: flex; justify-content: space-between; font-size: 8px; color: #4f738b; margin: 15px 0 8px; }
+.charge-track { height: 3px; background: #5691b01c; overflow: hidden; }
+.charge-track i { display: block; height: 100%; width: 100%; background: var(--cyan); box-shadow: 0 0 12px #66f5ff88; transform-origin: left; transform: scaleX(0); transition: transform .25s; }
+.quick-controls { position: absolute; left: 50%; bottom: 31px; transform: translateX(-50%); width: 310px; display: flex; flex-wrap: wrap; justify-content: center; gap: 9px; }
+.quick-controls button { min-height: 38px; display: flex; align-items: center; gap: 8px; padding: 5px 13px; color: #94baca; background: #0a192999; border: 1px solid #7cb5d12b; border-radius: 3px; backdrop-filter: blur(10px); font-size: 10px; }
+.quick-controls svg { width: 28px; height: 24px; stroke-width: 2; }
+.quick-controls kbd { color: #4a6d83; font: 8px var(--mono); margin-left: 5px; }
+.quick-controls button:hover { border-color: #66e5f77d; background: #153343bb; color: #caf9ff; }
+.quick-controls > span { width: 100%; text-align: center; font-size: 8px; letter-spacing: .5px; color: #46677e; margin-top: 3px; }
+
+/* 右下角摄像头与骨架识别。 */
+.camera-dock { position: fixed; z-index: 4; right: 26px; bottom: 26px; width: 208px; padding: 11px; border: 1px solid #72bdde30; background: #071521d9; backdrop-filter: blur(16px); border-radius: 3px; box-shadow: 0 15px 45px #0005; }
+.camera-dock.connected { border-color: #6df5ee66; }
+.dock-title { display: flex; align-items: center; justify-content: space-between; font: 8px var(--mono); letter-spacing: 1.7px; color: #86acc1; }
+.dock-title > span { display: flex; align-items: center; gap: 6px; }
+.dock-title button { width: 22px; height: 18px; background: none; border: 0; color: #789aac; font: 17px / 1 var(--mono); padding: 0; }
+.camera-view { position: relative; aspect-ratio: 1.65; margin-top: 10px; background: radial-gradient(ellipse, #102939, #091926); overflow: hidden; border: 1px solid #5489aa22; }
+.camera-view video, .camera-view canvas { position: absolute; width: 100%; height: 100%; inset: 0; object-fit: cover; }
+.camera-view video { transform: scaleX(-1); opacity: .65; }
+.camera-view canvas { z-index: 1; }
+#camera-placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; color: #5c94ad; }
+#camera-placeholder svg { width: 41px; height: 36px; stroke-width: 2; }
+#camera-placeholder span { font-size: 7px; color: #537b91; }
+.camera-state { position: absolute; bottom: 6px; left: 7px; background: #040d17aa; font-size: 6px; letter-spacing: 1.3px; color: #80b6c8; padding: 3px 4px; z-index: 2; }
+.camera-corners { position: absolute; inset: 6px; pointer-events: none; border: 1px solid #66e7ff14; z-index: 2; }
+.tracking-values { display: flex; justify-content: space-between; margin: 10px 0; gap: 8px; }
+.tracking-values > span { display: flex; align-items: center; gap: 4px; min-width: 0; }
+.tracking-values i { width: 3px; height: 3px; background: var(--cyan); flex-shrink: 0; }
+.tracking-values > span:last-child i { background: var(--gold); }
+.tracking-values b { font-size: 7px; font-weight: 400; color: #7199af; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.camera-button { width: 100%; min-height: 29px; display: flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid #74c6d947; background: #1b566522; color: #8acbda; font-size: 8px; border-radius: 1px; }
+.camera-button svg { width: 13px; height: 13px; }
+.camera-button:hover { background: #1b566555; }
+.practice-shortcut { width: 100%; border: 0; background: none; padding: 7px 0 0; font-size: 7px; color: #91aebc; }
+.camera-status { margin: 8px 0 0; font-size: 7px; line-height: 1.8; color: #4c7188; max-height: 37px; overflow-y: auto; scrollbar-width: thin; }
+
+/* 设置与暂停：仅在需要时显示，不挤占游戏面积。 */
+.paused-overlay { position: absolute; inset: 0; z-index: 6; background: #04101be0; backdrop-filter: blur(14px); display: grid; place-items: center; text-align: center; }
+.pause-glyph { font-size: 60px; color: var(--cyan); text-shadow: 0 0 35px #66f5ff44; }
+.paused-overlay .overline { justify-content: center; font: 8px var(--mono); margin: 25px 0 15px; }
+.paused-overlay h2 { font-size: 27px; font-weight: 400; letter-spacing: 2px; margin-bottom: 35px; }
+dialog { width: min(510px, calc(100% - 30px)); max-height: calc(100dvh - 32px); overflow-y: auto; padding: 32px; background: #091927; border: 1px solid #81cde343; border-radius: 4px; color: #c1dbe7; box-shadow: 0 25px 100px #0009; scrollbar-width: thin; }
+dialog::backdrop { background: #020912c7; backdrop-filter: blur(9px); }
+dialog .overline { font: 8px var(--mono); color: #5d9bb2; margin-bottom: 12px; }
+dialog h2 { font-size: 22px; font-weight: 400; letter-spacing: 1px; margin-bottom: 23px; }
+.dialog-close { position: absolute; right: 14px; top: 9px; background: none; border: 0; font-size: 25px; color: #628ba0; }
+.mode-tabs { display: flex; border: 1px solid var(--line); padding: 3px; margin-bottom: 13px; background: #050f1b; }
+.mode-tabs button { flex: 1; border: 0; background: none; color: #668ea7; height: 33px; font-size: 11px; }
+.mode-tabs .selected { background: #193849; color: #bbf3ff; }
+.guide-row { display: flex; align-items: center; gap: 13px; padding: 15px 0; border-bottom: 1px solid #76b7d21a; }
+.guide-row svg { width: 41px; height: 36px; stroke: #7cbed4; stroke-width: 2.2; }
+.guide-row > div { display: flex; flex-direction: column; gap: 6px; }
+.guide-row strong { font-size: 11px; font-weight: 500; }
+.guide-row small { font-size: 8px; line-height: 1.6; color: #69899e; }
+.guide-row kbd { margin-left: auto; font: 8px var(--mono); border: 1px solid #74a6be33; padding: 4px 5px; color: #789cb1; white-space: nowrap; }
+.mechanics-note { color: #7799ad; font-size: 9px; line-height: 1.9; margin: 17px 0 20px; padding-left: 12px; border-left: 1px solid #89bdc53d; }
+.settings-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 39px; font-size: 10px; color: #8eafc1; }
+.settings-row label { margin-right: auto; }
+.settings-row input[type=range] { width: 130px; accent-color: #69d6e6; height: 3px; }
+.settings-row output { font: 9px var(--mono); width: 30px; text-align: right; }
+.settings-row input[type=checkbox] { accent-color: #6ae4ed; width: 15px; height: 15px; }
+.settings-row select { font-size: 9px; color: #aac9da; border: 1px solid #7cafcc38; background: #0c2433; padding: 5px 10px; }
+.dialog-bottom { border-top: 1px solid #6fabc129; margin-top: 18px; padding-top: 20px; display: flex; align-items: center; justify-content: space-between; }
+.dialog-bottom > span { font-size: 8px; color: #5f829a; }
+.dialog-bottom button { border: 0; background: none; padding: 0; color: #8bd0df; font-size: 9px; }
+
+@keyframes sweep { 0%, 70% { left: -70px; } 100% { left: 130%; } }
+.reduce-motion *, .reduce-motion *::before, .reduce-motion *::after { animation: none !important; transition: none !important; }
+
+@media (max-width: 1000px) {
+  .home-copy { left: 7%; }
+  .home-copy h1 strong { font-size: 11vw; }
+  .home-copy h1 > span { font-size: 4.5vw; letter-spacing: 11px; }
+  .home-tagline { font-size: 11px; letter-spacing: 3px; }
+  .sector-label { display: none; }
+  .camera-dock { width: 185px; right: 20px; bottom: 20px; }
+  .quick-controls { left: 46%; }
+  .bottom-left-hud { width: 160px; left: 28px; }
+  .telemetry { gap: 12px; font-size: 7px; }
+}
+
+@media (max-width: 700px) {
+  .home-header { top: 28px; left: 27px; right: 27px; }
+  .wordmark { font-size: 17px; }
+  .home-header > .mono { font-size: 6px; letter-spacing: 1px; }
+  .home-header b { padding: 0 3px; }
+  .home-copy { left: 0; width: 100%; text-align: center; top: 57%; transform: none; }
+  .home-copy > .overline { justify-content: center; font-size: 8px; letter-spacing: 2px; margin-bottom: 11px; }
+  .home-copy h1 { letter-spacing: -3px; }
+  .home-copy h1 > span { display: none; }
+  .home-copy h1 strong { font-size: clamp(66px, 16vw, 104px); }
+  .home-tagline { margin: 15px 0 21px; font-size: 10px; letter-spacing: 3px; }
+  .primary-button { height: 48px; min-width: 208px; font-size: 12px; }
+  .home-coordinate { display: none; }
+  .reactor-annotation { display: none; }
+  .home-footer { left: 27px; right: 27px; bottom: 25px; font-size: 6px; letter-spacing: 1px; justify-content: center; }
+  .home-footer > span:last-child { display: none; }
+  .top-left-hud { left: 22px; top: 23px; gap: 13px; }
+  .back-home { font-size: 24px; }
+  .back-home span { font-size: 6px; }
+  .score-hud { padding-left: 12px; }
+  .score-hud strong { font-size: 26px; }
+  .score-unit { display: none; }
+  .mini-label { font-size: 7px; letter-spacing: 1px; }
+  .toolbar { top: 25px; right: 21px; gap: 5px; }
+  .icon-button { width: 28px; height: 28px; font-size: 14px; }
+  .icon-button svg { width: 12px; height: 12px; }
+  .mode-indicator { top: 91px; left: 24px; font-size: 7px; }
+  .feedback { top: 116px; max-width: 90%; width: 90%; font-size: 8px; line-height: 1.8; }
+  .combo-hud { top: 155px; right: 25px; }
+  .combo-hud > span { font-size: 6px; letter-spacing: 1px; }
+  .combo-hud strong { font-size: 24px; }
+  .combo-hud > div { width: 80px; }
+  .camera-dock { width: 151px; right: 16px; bottom: 17px; padding: 8px; }
+  .dock-title { font-size: 7px; letter-spacing: 1px; }
+  .camera-view { margin-top: 7px; }
+  #camera-placeholder svg { width: 31px; height: 28px; }
+  #camera-placeholder span { font-size: 6px; }
+  .camera-state { font-size: 5px; padding: 2px 3px; }
+  .tracking-values { gap: 4px; margin: 8px 0; }
+  .tracking-values b { font-size: 6px; }
+  .camera-button { font-size: 7px; min-height: 27px; }
+  .camera-status { font-size: 6px; max-height: 32px; }
+  .bottom-left-hud { width: 147px; left: 22px; bottom: 25px; }
+  .telemetry { font-size: 6px; gap: 9px; }
+  .telemetry strong { font-size: 10px; margin-left: 3px; }
+  .charge-label { font-size: 7px; margin-top: 11px; }
+  .quick-controls { left: 22px; bottom: 104px; width: calc(100% - 195px); transform: none; justify-content: flex-start; gap: 6px; }
+  .quick-controls button { padding: 6px 8px; gap: 4px; font-size: 9px; min-height: 36px; }
+  .quick-controls svg { width: 23px; height: 23px; }
+  .quick-controls kbd { display: none; }
+  .quick-controls > span { font-size: 6px; text-align: left; line-height: 1.9; }
+  .paused-overlay h2 { font-size: 22px; }
+  dialog { padding: 30px 23px; }
+  dialog h2 { font-size: 20px; }
+  .guide-row { gap: 9px; }
+  .guide-row strong { font-size: 10px; }
+  .guide-row small { font-size: 7px; }
+  .guide-row kbd { font-size: 7px; }
+}
+
+@media (max-height: 560px) and (min-width: 701px) {
+  .home-copy h1 strong { font-size: 21vh; }
+  .home-copy h1 > span { font-size: 6vh; }
+  .home-tagline { margin: 18px 0 22px; }
+  .home-copy > .overline { margin-bottom: 16px; }
+  .primary-button { height: 45px; }
+  .home-coordinate { display: none; }
+  .camera-dock { width: 162px; }
+  .camera-status { display: none; }
+  .camera-view { aspect-ratio: 1.9; }
+  .feedback { top: 85px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .primary-button i { animation: none; }
+}
+
+/* 吞噬星空：电影式字排与低干扰界面。 */
+.screen-frame { display:none; }
+.home-header { top:42px; left:5%; right:5%; }
+.wordmark { font:400 16px var(--font); letter-spacing:7px; color:#ded8ca; }
+.home-header > .mono { color:#8c9199; letter-spacing:2px; }
+.home-copy { left:10%; transform:translateY(-46%); }
+.home-copy h1 { font-family:'STSong','SimSun','Songti SC',serif; line-height:1.08; letter-spacing:14px; }
+.home-copy h1 > span, .home-copy h1 strong { display:block; font-size:clamp(74px,8.7vw,136px); font-weight:400; letter-spacing:18px; color:#eee9dd; text-shadow:0 3px 35px #000; margin:0; }
+.home-copy h1 strong { color:#b7b5b0; }
+.home-copy > .overline { font-size:11px; letter-spacing:5px; color:#a5a19a; margin-bottom:28px; }
+.home-copy > .overline i { display:none; }
+.home-tagline { color:#a7a7a3; font-size:12px; letter-spacing:5px; margin:30px 0 36px; }
+.primary-button { min-width:208px; background:linear-gradient(120deg,#b7a28222,#0b0d12aa); border:1px solid #ad967d70; color:#ede3d2; box-shadow:none; border-radius:0; }
+.primary-button:hover { background:#ba9a652d; box-shadow:0 0 35px #ba9a6512; border-color:#cbb593; }
+.primary-button::before,.primary-button i { display:none; }
+.home-coordinate { color:#6f7379; font-size:8px; letter-spacing:2.5px; margin-top:20px; }
+.reactor-annotation { color:#a9a195; right:10%; bottom:20%; }
+.reactor-annotation .mono { color:#d4b590; }
+.reactor-annotation i { background:#d4b59055; }
+.home-footer { color:#8c9197; }
+.home-footer .status-dot { background:#d3b693; box-shadow:none; }
+.game-stage { color:var(--stage-color,#92c8e1); }
+.sector-label { color:var(--stage-color); font:400 14px var(--font); letter-spacing:5px; top:36px; text-align:center; }
+.sector-label span { color:inherit; }
+.sector-label small { display:block; color:#989da4; font:9px var(--font); letter-spacing:3px; margin-top:9px; }
+.score-hud .mini-label { color:#afb0ad; }
+.score-hud strong { color:#e1ded6; }
+.back-home { color:#c7b18e; }
+.feedback { color:#939ba3; }
+.bottom-left-hud { color:#a4a5a5; }
+.charge-track { background:#ffffff12; }
+#charge-fill { background:var(--stage-color); box-shadow:0 0 10px #c6ac7833; transition:transform .6s,background 2s; }
+.camera-dock { background:#080b10b8; border-color:#b4b0a329; box-shadow:0 16px 40px #0005; backdrop-filter:blur(14px); }
+.dock-title { color:#a7a39b; }
+.camera-view { background:radial-gradient(ellipse,#1a2027,#090c11); border-color:#a8a08f20; }
+.camera-button { border-color:#c5b18b45; color:#c8c4bc; background:#bca78108; }
+.quick-controls button { background:#0c0e12b0; border-color:#b1a28d26; color:#c4c4bf; }
+.icon-button { border-color:#ffffff18; background:#10111688; color:#b4b5b5; }
+@media(max-width:700px) {
+ .home-header { top:26px; }.wordmark { font-size:12px; letter-spacing:4px; }
+ .home-copy { top:58%; left:10%; transform:none; }.home-copy h1 { display:flex; gap:4px; }
+ .home-copy h1 > span,.home-copy h1 strong { font-size:clamp(40px,11vw,64px); letter-spacing:5px; }
+ .home-copy > .overline { font-size:8px; margin-bottom:16px; letter-spacing:3px; }
+ .home-tagline { margin:18px 0 22px; font-size:9px; letter-spacing:3px; }
+ .home-coordinate { display:none; }.reactor-annotation { display:none; }
+ .home-footer { bottom:20px; }.home-footer>span:last-child { display:none; }
+ .sector-label { display:block; top:114px; width:100%; font-size:12px; letter-spacing:3px; }
+ .sector-label small { font-size:8px; margin-top:6px; }.feedback { top:155px; }
+ .combo-hud { top:198px; }.home-copy .primary-button { height:46px; min-width:192px; }
+}
+@media(max-height:560px) and (min-width:701px) {
+ .home-copy h1>span,.home-copy h1 strong { font-size:14vh; }.home-copy>.overline { margin-bottom:12px; }
+ .home-tagline { margin:14px 0 18px; }.sector-label { top:25px; }
+}
+
+/* 航道提示与失败结算：仍属于同一个游玩页。 */
+.route-indicator { position:absolute;left:34px;top:147px;color:#9da6b3;font:9px var(--mono);letter-spacing:2px;pointer-events:none; }
+.route-indicator span { margin-left:16px;color:#c8aa84; }
+.failure-dialog { width:min(510px,calc(100vw - 36px));text-align:center;border-color:#a77a5d66;background:linear-gradient(150deg,#1d1a1bee,#090c13fa);padding:44px 38px; }
+.failure-dialog::backdrop { background:#02040bb8;backdrop-filter:blur(3px); }
+.failure-dialog .overline { justify-content:center;color:#bf9274;font-size:9px; }
+.failure-dialog h2 { color:#eee1d2;font:400 27px 'SimSun',serif;letter-spacing:3px;margin:20px 0; }
+#failure-reason { font-size:12px;color:#b0a8a1;line-height:1.9;margin-bottom:25px; }
+.failure-stats { display:flex;justify-content:center;gap:62px;border-top:1px solid #ffffff15;border-bottom:1px solid #ffffff15;padding:22px 0;margin-bottom:30px; }
+.failure-stats strong { display:block;font:28px var(--mono);color:#e6c8a7; }
+.failure-stats span { display:block;font-size:10px;color:#9e9691;margin-top:8px; }
+.failure-dialog .primary-button { width:100%;justify-content:center; }
+.failure-home { border:0;background:none;color:#9d9fa3;font-size:11px;padding:18px 20px 0; }
+@media(max-width:700px) { .route-indicator { top:88px;left:auto;right:22px;font-size:7px;letter-spacing:1px; }.route-indicator span { margin-left:6px; }.failure-dialog { padding:34px 23px; }.failure-dialog h2 { font-size:23px; } }
+
+/* Show every fingertip, including near the top/bottom of a 4:3 camera. */
+.camera-view video { object-fit: contain; }
+
+/* 星际航路状态占用边缘空白，不覆盖中央游玩区域。 */
+.traffic-status { position:absolute;left:37px;top:155px;display:grid;gap:9px;pointer-events:none;border-left:1px solid #95afbb40;padding-left:13px;color:#a7bcc7; }
+.traffic-status > span {font-size:9px;letter-spacing:3px;color:#647884;}
+.traffic-status strong {font-size:13px;font-weight:400;letter-spacing:2px;}
+.traffic-status small {font-size:9px;color:#7d8c95;}
+.traffic-status[data-phase="crossing"],.traffic-status[data-phase="warning"] {color:#edb391;border-color:#e7a68480;}
+.traffic-status[data-phase="outward"] {color:#b1c9db;}
+.feedback {color:#a6b5bf;line-height:1.9;}
+@media(max-width:700px){.traffic-status{left:24px;top:154px;gap:6px;padding-left:8px;}.traffic-status strong{font-size:10px;}.traffic-status small,.traffic-status>span{font-size:7px;}.feedback{top:112px;font-size:8px;}}
